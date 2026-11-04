@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Portrait placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c1c22"/>
+      <stop offset="1" stop-color="#0d0d0f"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="50%" cy="34%" r="60%">
+      <stop offset="0" stop-color="#d97706" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#d97706" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="300" height="400" fill="url(#bg)"/>
+  <rect width="300" height="400" fill="url(#lamp)"/>
+
+  <!-- detective silhouette: fedora + coat -->
+  <g fill="#2b2b33" stroke="#b91c1c" stroke-width="1.5" opacity="0.9">
+    <!-- hat brim -->
+    <ellipse cx="150" cy="150" rx="86" ry="20"/>
+    <!-- hat crown -->
+    <path d="M100 150 Q104 96 150 94 Q196 96 200 150 Z"/>
+    <!-- head/shoulders -->
+    <path d="M118 158 Q118 206 150 212 Q182 206 182 158
+             L200 158 Q236 176 244 260 Q250 320 250 360
+             L50 360 Q50 320 56 260 Q64 176 100 158 Z"/>
+  </g>
+
+  <!-- faint fingerprint overlay -->
+  <g fill="none" stroke="#b91c1c" stroke-width="1.2" opacity="0.12">
+    <path d="M150 230 q-40 0 -40 44 q0 24 6 44"/>
+    <path d="M150 244 q-28 0 -28 30 q0 24 6 44"/>
+    <path d="M150 258 q-16 0 -16 18 q0 24 6 44"/>
+    <path d="M150 230 q40 0 40 44 q0 24 -6 44"/>
+    <path d="M150 244 q28 0 28 30 q0 24 -6 44"/>
+  </g>
+
+  <text x="150" y="388" text-anchor="middle" fill="#a9a394"
+        font-family="'Courier New', monospace" font-size="11" letter-spacing="2">
+    PHOTO — EXHIBIT A
+  </text>
+</svg>

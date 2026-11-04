@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Thirandi De Silva — Computing undergraduate . A case-file portfolio of mobile and software projects." />
+<meta name="author" content="Thirandi De Silva" />
+<title>Thirandi De Silva — Case File</title>
+
+<!-- ============================================================
+     GOOGLE FONTS
+     - Poppins       : headings + body copy
+     - Special Elite : typewriter mono for labels ("CASE FILE #001")
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,500&family=Special+Elite&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   DESIGN TOKENS  — all theming lives in CSS custom properties so
+   the dark / daylight toggle just swaps one attribute on <html>.
+   ============================================================ */
+:root,
+[data-theme="dark"] {
+  --bg:            #0d0d0f;   /* near-black study */
+  --bg-2:         #141418;   /* raised surfaces */
+  --bg-3:         #1c1c22;   /* cards / inputs */
+  --paper:        #e8e2d4;   /* aged cream text */
+  --paper-dim:    #a9a394;   /* muted cream */
+  --ink:          #e8e2d4;
+  --line:         #2b2b33;   /* hairline borders */
+  --red:          #b91c1c;   /* primary accent — blood red */
+  --red-bright:   #e23b3b;
+  --amber:        #d97706;   /* secondary accent — lamplight */
+  --amber-soft:   #f0a94a;
+  --shadow:       0 18px 45px -18px rgba(0,0,0,.8);
+  --shadow-lift:  0 30px 70px -20px rgba(0,0,0,.9);
+  --grain-opacity: .05;
+  --redact-bg:    #0d0d0f;   /* colour of the redaction bar */
+}
+
+/* Daylight "aged paper" theme */
+[data-theme="light"] {
+  --bg:            #ded6c2;
+  --bg-2:         #e9e2d2;
+  --bg-3:         #f4efe4;
+  --paper:        #26231d;   /* dark ink on paper */
+  --paper-dim:    #5c5546;
+  --ink:          #26231d;
+  --line:         #c6bca6;
+  --red:          #a01818;
+  --red-bright:   #c22a2a;
+  --amber:        #b45f06;
+  --amber-soft:   #96500a;
+  --shadow:       0 18px 40px -20px rgba(80,66,40,.45);
+  --shadow-lift:  0 28px 60px -22px rgba(80,66,40,.55);
+  --grain-opacity: .08;
+  --redact-bg:    #26231d;
+}
+
+/* ---------- reset / base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.65;
+  overflow-x: hidden;
+  /* animate theme swap instead of snapping */
+  transition: background-color .6s ease, color .6s ease;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+/* Paper-grain + faint fingerprint texture, fixed behind everything.
+   Pure CSS gradients so there is no network cost. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--grain-opacity);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.4) 0, transparent 2px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,.3) 0, transparent 2px),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,.3) 0, transparent 2px);
+  background-size: 7px 7px, 11px 11px, 13px 13px;
+  transition: opacity .6s ease;
+}
+
+/* ============================================================
+   PAGE-WIDE ANIMATED BACKGROUND — fixed behind all content so
+   the whole page breathes, not just the hero. Subtle enough to
+   keep text readable; sits below .wrap (z-index 1).
+   ============================================================ */
+.page-fx { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.page-fx .page-glow { position: absolute; border-radius: 50%; filter: blur(44px); opacity: .22; }
+.page-fx .g1 {
+  top: 18%; left: -12%; width: 42vw; height: 42vw;
+  background: radial-gradient(circle, color-mix(in srgb, var(--red) 16%, transparent) 0, transparent 66%);
+  animation: floatGlow 26s ease-in-out infinite alternate;
+}
+.page-fx .g2 {
+  bottom: 8%; right: -10%; width: 46vw; height: 46vw;
+  background: radial-gradient(circle, color-mix(in srgb, var(--amber) 14%, transparent) 0, transparent 66%);
+  animation: floatGlow2 32s ease-in-out infinite alternate;
+}
+.page-fx .g3 {
+  top: 55%; left: 45%; width: 34vw; height: 34vw;
+  background: radial-gradient(circle, color-mix(in srgb, var(--red) 12%, transparent) 0, transparent 66%);
+  animation: floatGlow 38s ease-in-out infinite alternate-reverse;
+}
+@keyframes floatGlow  { from { transform: translate(0, 0); }      to { transform: translate(46px, -34px); } }
+@keyframes floatGlow2 { from { transform: translate(0, 0); }      to { transform: translate(-54px, 32px); } }
+/* motes on this fixed layer drift across the whole viewport continuously */
+.page-fx .page-motes span { animation-name: floatFix; }
+@keyframes floatFix {
+  0%   { transform: translateY(0) scale(.5);    opacity: 0; }
+  12%  { opacity: .4; }
+  85%  { opacity: .3; }
+  100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+}
+
+/* ============================================================
+   CURSOR GLOW — a soft red light that trails the pointer across
+   the whole page. Uses screen blend so it brightens, never hides.
+   ============================================================ */
+.cursor-glow {
+  position: fixed; top: 0; left: 0; width: 340px; height: 340px; border-radius: 50%;
+  pointer-events: none; z-index: 60; opacity: 0;
+  background: radial-gradient(circle, color-mix(in srgb, var(--red) 32%, transparent) 0%, transparent 60%);
+  mix-blend-mode: screen; will-change: transform;
+  transition: opacity .3s ease, transform .12s ease-out;
+}
+
+/* ---------- typographic helpers ---------- */
+h1, h2, h3 { font-family: 'Poppins', system-ui, sans-serif; line-height: 1.1; margin: 0; }
+.mono { font-family: 'Special Elite', 'Courier New', monospace; letter-spacing: .06em; }
+
+/* small typewriter label e.g. CASE FILE #001 */
+.label {
+  font-family: 'Special Elite', monospace;
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+/* ---------- layout ---------- */
+.wrap { width: min(1100px, 92vw); margin-inline: auto; position: relative; z-index: 1; }
+section { padding: clamp(4rem, 9vw, 7.5rem) 0; position: relative; }
+
+/* Section heading block with evidence-tag number */
+.section-head { margin-bottom: 2.75rem; }
+.section-head .label { display: inline-block; margin-bottom: .6rem; }
+.section-head h2 { font-size: clamp(1.9rem, 5vw, 3.1rem); font-weight: 700; }
+.section-head p  { color: var(--paper-dim); max-width: 52ch; margin: .6rem 0 0; }
+
+/* ============================================================
+   RED THREAD — a faint vertical line linking the sections,
+   evoking the corkboard string that connects clues.
+   ============================================================ */
+.thread {
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(var(--red), transparent 40%, var(--red) 80%);
+  opacity: .14;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+header.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem clamp(1rem, 4vw, 2.5rem);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid transparent;
+  transition: padding .35s ease, background-color .35s ease, border-color .35s ease;
+}
+/* shrinks + darkens once scrolled past the hero */
+header.nav.scrolled {
+  padding: .6rem clamp(1rem, 4vw, 2.5rem);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: .6rem; font-family: 'Special Elite', monospace; font-size: .95rem; letter-spacing: .1em; }
+.brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 4px color-mix(in srgb, var(--red) 25%, transparent); animation: pulse 2.6s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+nav.links { display: flex; align-items: center; gap: 1.6rem; }
+nav.links a {
+  font-size: .85rem; letter-spacing: .02em; color: var(--paper-dim);
+  position: relative; padding: .25rem 0; transition: color .25s ease;
+}
+nav.links a::after { /* underline-draw on hover */
+  content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 0;
+  background: var(--red); transition: width .3s ease;
+}
+nav.links a:hover, nav.links a:focus-visible { color: var(--ink); }
+nav.links a:hover::after, nav.links a:focus-visible::after { width: 100%; }
+
+/* theme toggle */
+.toggle {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--bg-3); border: 1px solid var(--line); color: var(--paper-dim);
+  border-radius: 999px; padding: .4rem .75rem; cursor: pointer;
+  font-family: 'Special Elite', monospace; font-size: .7rem; letter-spacing: .1em;
+  transition: color .25s ease, border-color .25s ease;
+}
+.toggle:hover, .toggle:focus-visible { color: var(--ink); border-color: var(--amber); }
+.toggle .icon { width: 16px; height: 16px; }
+
+/* hamburger (mobile) */
+.burger {
+  display: none; flex-direction: column; gap: 5px; background: none; border: 0;
+  cursor: pointer; padding: .4rem; z-index: 60;
+}
+.burger span { width: 24px; height: 2px; background: var(--ink); transition: transform .3s ease, opacity .3s ease; }
+.burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero { min-height: 100svh; display: flex; align-items: center; padding-top: 6rem; position: relative; overflow: hidden; }
+
+/* ---- animated hero background scene ---- */
+.hero .motif {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.hero .motif svg { position: absolute; }
+
+/* breathing amber "lamplight" glow */
+.hero .glow {
+  position: absolute; top: 38%; right: 6%; width: 62vw; max-width: 780px; aspect-ratio: 1;
+  transform: translateY(-50%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--amber) 20%, transparent) 0, transparent 60%);
+  filter: blur(14px); opacity: .5;
+  animation: breathe 9s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { opacity: .4;  transform: translateY(-50%) scale(1); }
+  50%      { opacity: .7;  transform: translateY(-50%) scale(1.13); }
+}
+
+/* two slowly drifting fingerprints */
+.fp  { top: 50%; right: -8%; width: 620px; max-width: 70vw; transform: translateY(-50%); color: var(--red);   opacity: .14; animation: drift  22s ease-in-out infinite alternate; }
+.fp2 { bottom: -16%; left: -12%; width: 440px; max-width: 52vw; color: var(--amber); opacity: .08; animation: drift2 27s ease-in-out infinite alternate; }
+@keyframes drift  { from { transform: translateY(-52%) rotate(-2deg); } to { transform: translateY(-46%) rotate(3deg); } }
+@keyframes drift2 { from { transform: rotate(5deg)  translateY(0);     } to { transform: rotate(-3deg) translateY(-20px); } }
+
+/* swaying red thread arc (the corkboard string) */
+.thread-arc { inset: 0; width: 100%; height: 100%; color: var(--red); opacity: .16; }
+.thread-arc path { stroke-dasharray: 10 16; animation: dash 34s linear infinite, sway 11s ease-in-out infinite alternate; }
+@keyframes dash { to { stroke-dashoffset: -520; } }
+@keyframes sway { from { transform: translateY(-8px); } to { transform: translateY(12px); } }
+
+/* floating dust motes caught in the lamplight */
+.motes { position: absolute; inset: 0; }
+.motes span {
+  position: absolute; bottom: -12px; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--amber-soft); opacity: 0;
+  animation: float 15s linear infinite;
+}
+@keyframes float {
+  0%   { transform: translateY(0) scale(.5);   opacity: 0; }
+  12%  { opacity: .55; }
+  85%  { opacity: .45; }
+  100% { transform: translateY(-90vh) scale(1); opacity: 0; }
+}
+.motes span:nth-child(1)  { left: 10%; animation-duration: 16s; animation-delay: 0s;   }
+.motes span:nth-child(2)  { left: 20%; animation-duration: 13s; animation-delay: 4s;   width:4px;height:4px; }
+.motes span:nth-child(3)  { left: 32%; animation-duration: 18s; animation-delay: 1.5s; }
+.motes span:nth-child(4)  { left: 44%; animation-duration: 14s; animation-delay: 6s;   width:3px;height:3px; }
+.motes span:nth-child(5)  { left: 55%; animation-duration: 17s; animation-delay: 2.5s; }
+.motes span:nth-child(6)  { left: 64%; animation-duration: 15s; animation-delay: 8s;   width:6px;height:6px; background: color-mix(in srgb,var(--red) 70%, var(--amber)); }
+.motes span:nth-child(7)  { left: 73%; animation-duration: 19s; animation-delay: 3.5s; }
+.motes span:nth-child(8)  { left: 82%; animation-duration: 12s; animation-delay: 7s;   width:4px;height:4px; }
+.motes span:nth-child(9)  { left: 90%; animation-duration: 16s; animation-delay: 5s;   }
+.motes span:nth-child(10) { left: 48%; animation-duration: 20s; animation-delay: 9.5s; width:3px;height:3px; }
+
+.hero-inner { position: relative; z-index: 1; max-width: 780px; }
+.hero .status {
+  display: inline-flex; align-items: center; gap: .6rem; margin-bottom: 1.6rem;
+  border: 1px dashed var(--red); color: var(--red); padding: .45rem .9rem; border-radius: 4px;
+  font-family: 'Special Elite', monospace; font-size: .72rem; letter-spacing: .18em;
+}
+.hero .status .blink { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: pulse 1.4s infinite; }
+
+.hero h1 { font-weight: 900; letter-spacing: -.01em; margin-bottom: .4rem; }
+.hero h1 .thin { font-weight: 500; font-style: italic; color: var(--paper-dim); display: block; font-size: clamp(1.05rem, 3.4vw, 2rem); letter-spacing: .02em; margin-bottom: .4rem; }
+/* name forced onto a single line; font scales with viewport so it never wraps */
+.hero h1 .name-line { display: block; white-space: nowrap; font-size: clamp(2rem, 9vw, 5.6rem); line-height: 1; }
+.hero .role { font-family: 'Special Elite', monospace; font-size: clamp(.85rem, 2.4vw, 1.05rem); color: var(--amber); letter-spacing: .04em; }
+.hero .tagline {
+  font-family: 'Poppins', sans-serif; font-style: italic; font-weight: 500; font-size: clamp(1.15rem, 3.2vw, 1.7rem);
+  margin: 1.4rem 0 2.4rem; color: var(--paper); min-height: 1.4em;
+}
+.hero .tagline .caret { color: var(--red); font-style: normal; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+
+.hero .loc { margin-top: 2.6rem; display: flex; gap: 1.4rem; flex-wrap: wrap; color: var(--paper-dim); font-size: .8rem; }
+.hero .loc span { display: inline-flex; align-items: center; gap: .45rem; }
+
+/* ---------- buttons ---------- */
+.btn-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn {
+  --glow: var(--amber);
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: .85rem 1.5rem; border-radius: 6px; cursor: pointer;
+  font-family: 'Special Elite', monospace; font-size: .82rem; letter-spacing: .08em;
+  border: 1px solid var(--red); background: var(--red); color: #fff;
+  transition: transform .25s ease, box-shadow .3s ease, background-color .3s ease;
+  position: relative;
+}
+.btn:hover, .btn:focus-visible { transform: translateY(-2px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--glow) 25%, transparent), 0 12px 28px -10px color-mix(in srgb, var(--red) 70%, transparent); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.ghost:hover, .btn.ghost:focus-visible { border-color: var(--amber); box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 18%, transparent); }
+
+/* ============================================================
+   ABOUT — detective dossier card
+   ============================================================ */
+.dossier {
+  display: grid; grid-template-columns: 260px 1fr; gap: 2.4rem;
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px;
+  padding: 2.2rem; box-shadow: var(--shadow); position: relative;
+}
+.dossier::before { /* corner "evidence tag" */
+  content: "EXHIBIT A"; position: absolute; top: -12px; right: 18px;
+  background: var(--amber); color: #1a1205; font-family: 'Special Elite', monospace;
+  font-size: .62rem; letter-spacing: .14em; padding: .25rem .7rem; border-radius: 3px;
+  transform: rotate(2deg); box-shadow: var(--shadow);
+}
+.dossier .photo {
+  border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--bg-3);
+  aspect-ratio: 3/4; position: relative;
+}
+.dossier .photo img { width: 100%; height: 100%; object-fit: cover; }
+.dossier .photo .stamp {
+  position: absolute; bottom: 10px; left: 10px; font-family: 'Special Elite', monospace;
+  font-size: .6rem; letter-spacing: .12em; color: var(--paper-dim);
+  border: 1px solid var(--line); padding: .2rem .5rem; border-radius: 3px;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+}
+.dossier h3 { font-size: 1.8rem; margin-bottom: .2rem; }
+.dossier .bio { color: var(--paper-dim); margin: 1rem 0 1.4rem; }
+.facts { display: grid; gap: .8rem; }
+.fact { display: grid; grid-template-columns: 120px 1fr; gap: .8rem; align-items: baseline; border-top: 1px dashed var(--line); padding-top: .7rem; }
+.fact .k { font-family: 'Special Elite', monospace; font-size: .68rem; letter-spacing: .12em; color: var(--red); text-transform: uppercase; }
+.fact .v { color: var(--ink); font-size: .92rem; }
+
+/* ============================================================
+   CASE FILES (projects)
+   ============================================================ */
+.cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.6rem; }
+.case {
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px;
+  padding: 1.8rem; position: relative; overflow: hidden; isolation: isolate;
+  transition: transform .3s ease, box-shadow .35s ease, border-color .35s ease;
+}
+/* keep all card content above the glow layer */
+.case > * { position: relative; z-index: 1; }
+
+/* red glow that follows the cursor across the card */
+.case::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%),
+              color-mix(in srgb, var(--red) 40%, transparent) 0%, transparent 60%);
+  opacity: 0; transition: opacity .35s ease;
+}
+.case:hover::before, .case:focus-within::before { opacity: 1; }
+
+.case::after { /* thin red folder tab up top */
+  content: ""; position: absolute; top: 0; left: 1.8rem; width: 54px; height: 5px;
+  background: var(--red); border-radius: 0 0 4px 4px; z-index: 2;
+}
+.case:hover, .case:focus-within {
+  transform: translateY(-6px);
+  border-color: var(--red);
+  box-shadow: var(--shadow-lift),
+              0 0 0 1px color-mix(in srgb, var(--red) 55%, transparent),
+              0 12px 46px -8px color-mix(in srgb, var(--red) 55%, transparent);
+}
+/* brighter red pulse on click */
+.case:active {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift),
+              0 0 0 2px var(--red),
+              0 0 52px -2px color-mix(in srgb, var(--red) 72%, transparent);
+}
+.case .top { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: .7rem; }
+.case .num { font-family: 'Special Elite', monospace; font-size: .72rem; letter-spacing: .14em; color: var(--red); }
+.case .dates { font-family: 'Special Elite', monospace; font-size: .68rem; color: var(--paper-dim); letter-spacing: .06em; white-space: nowrap; }
+.case h3 { font-size: 1.4rem; margin-bottom: .55rem; }
+.case .desc { color: var(--paper-dim); font-size: .92rem; margin-bottom: 1.1rem; }
+
+/* redacted line — revealed on hover/focus */
+.case .redacted { margin-bottom: 1.1rem; font-size: .86rem; }
+.case .redacted .bar {
+  background: var(--redact-bg); color: transparent; border-radius: 2px; padding: 0 .3em;
+  transition: background-color .4s ease, color .4s ease; user-select: none;
+}
+.case:hover .redacted .bar, .case:focus-within .redacted .bar { background: transparent; color: var(--amber); user-select: text; }
+
+.evidence { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.1rem; }
+.tag {
+  font-family: 'Special Elite', monospace; font-size: .68rem; letter-spacing: .06em;
+  background: var(--bg-3); border: 1px solid var(--line); color: var(--paper-dim);
+  padding: .3rem .6rem; border-radius: 4px;
+  /* staggered reveal: start hidden, revealed by .in-view */
+  opacity: 0; transform: translateY(6px); transition: opacity .4s ease, transform .4s ease, border-color .25s ease, color .25s ease;
+}
+.case .tag:hover { color: var(--amber); border-color: var(--amber); }
+.case.in-view .tag { opacity: 1; transform: none; }
+.case-links { display: flex; gap: 1rem; }
+.case-links a { font-family: 'Special Elite', monospace; font-size: .72rem; letter-spacing: .08em; color: var(--paper-dim); display: inline-flex; align-items: center; gap: .35rem; transition: color .25s ease; }
+.case-links a:hover, .case-links a:focus-visible { color: var(--amber); }
+
+/* ============================================================
+   TOOLKIT (skills / evidence board)
+   ============================================================ */
+.board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.4rem; }
+.kit {
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem;
+  box-shadow: var(--shadow); position: relative; overflow: hidden; isolation: isolate;
+  transition: transform .3s ease, box-shadow .35s ease, border-color .35s ease;
+}
+/* keep content above the glow layer */
+.kit > * { position: relative; z-index: 1; }
+/* red glow that follows the cursor */
+.kit::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
+              color-mix(in srgb, var(--red) 38%, transparent) 0%, transparent 60%);
+  opacity: 0; transition: opacity .35s ease;
+}
+.kit:hover::before, .kit:focus-within::before { opacity: 1; }
+.kit:hover, .kit:focus-within {
+  transform: translateY(-5px);
+  border-color: var(--red);
+  box-shadow: var(--shadow),
+              0 0 0 1px color-mix(in srgb, var(--red) 55%, transparent),
+              0 12px 44px -10px color-mix(in srgb, var(--red) 52%, transparent);
+}
+.kit:active {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow),
+              0 0 0 2px var(--red),
+              0 0 50px -2px color-mix(in srgb, var(--red) 70%, transparent);
+}
+.kit h3 { font-size: 1.05rem; font-family: 'Special Elite', monospace; letter-spacing: .08em; color: var(--amber); margin-bottom: 1rem; }
+.kit ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.kit li { font-size: .82rem; background: var(--bg-3); border: 1px solid var(--line); padding: .35rem .65rem; border-radius: 4px; transition: border-color .25s ease, color .25s ease; }
+.kit li:hover { border-color: var(--red); color: var(--red-bright); }
+
+/* ============================================================
+   THE RECORD (timeline)
+   ============================================================ */
+.timeline { position: relative; margin-left: 1rem; padding-left: 2rem; border-left: 2px solid var(--line); }
+.entry { position: relative; padding-bottom: 2.4rem; }
+.entry:last-child { padding-bottom: 0; }
+.entry::before { content: ""; position: absolute; left: calc(-2rem - 7px); top: .35rem; width: 12px; height: 12px; border-radius: 50%; background: var(--red); border: 3px solid var(--bg); }
+.entry .when { font-family: 'Special Elite', monospace; font-size: .7rem; letter-spacing: .1em; color: var(--amber); }
+.entry h3 { font-size: 1.2rem; margin: .3rem 0 .2rem; }
+.entry .where { color: var(--paper-dim); font-size: .9rem; }
+.entry .meta { color: var(--red); font-family: 'Special Elite', monospace; font-size: .72rem; letter-spacing: .08em; margin-top: .3rem; }
+.record-extra { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: 2.6rem; }
+.record-extra .kit li { cursor: default; }
+@media (max-width: 620px) { .record-extra { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 2.4rem; align-items: start; }
+.contact-intro p { color: var(--paper-dim); }
+.contact-intro .mailbtn { margin: 1.4rem 0; }
+.socials { display: flex; gap: .8rem; margin-top: 1.4rem; }
+.socials a {
+  width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); border-radius: 8px; color: var(--paper-dim);
+  transition: color .25s ease, border-color .25s ease, transform .25s ease;
+}
+.socials a:hover, .socials a:focus-visible { color: var(--amber); border-color: var(--amber); transform: translateY(-2px); }
+
+.tip {
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 1.8rem;
+  box-shadow: var(--shadow); position: relative;
+}
+.tip::before { content: "LEAVE A TIP"; position: absolute; top: -12px; left: 18px; background: var(--red); color: #fff; font-family: 'Special Elite', monospace; font-size: .62rem; letter-spacing: .14em; padding: .25rem .7rem; border-radius: 3px; transform: rotate(-2deg); }
+.field { margin-bottom: 1.1rem; }
+.field label { display: block; font-family: 'Special Elite', monospace; font-size: .7rem; letter-spacing: .1em; color: var(--paper-dim); margin-bottom: .45rem; text-transform: uppercase; }
+.field input, .field textarea {
+  width: 100%; background: var(--bg-3); border: 1px solid var(--line); border-radius: 6px;
+  color: var(--ink); padding: .75rem .85rem; font-family: 'Poppins', sans-serif; font-size: .92rem;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+.field textarea { resize: vertical; min-height: 120px; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--amber); box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 18%, transparent); }
+.field .err { color: var(--red-bright); font-size: .75rem; margin-top: .35rem; min-height: 1em; display: block; }
+.field input[aria-invalid="true"], .field textarea[aria-invalid="true"] { border-color: var(--red-bright); }
+.form-note { margin-top: 1rem; font-size: .85rem; min-height: 1.2em; }
+.form-note.ok { color: var(--amber-soft); }
+.form-note.bad { color: var(--red-bright); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer { border-top: 1px solid var(--line); padding: 2.5rem 0 3rem; text-align: center; position: relative; z-index: 1; }
+footer .fp-mark { color: var(--red); opacity: .5; margin-bottom: 1rem; display: flex; justify-content: center; }
+footer p { color: var(--paper-dim); font-family: 'Special Elite', monospace; font-size: .78rem; letter-spacing: .08em; }
+
+/* ============================================================
+   SCROLL-REVEAL  (toggled by IntersectionObserver)
+   ============================================================ */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+.reveal.in-view { opacity: 1; transform: none; }
+
+/* skip link */
+.skip { position: absolute; left: -999px; top: 0; z-index: 100; background: var(--red); color: #fff; padding: .6rem 1rem; border-radius: 0 0 6px 0; }
+.skip:focus { left: 0; }
+
+/* custom magnifying-glass glow cursor on interactive elements */
+a, button, .case, .tag, input, textarea { cursor: pointer; }
+input, textarea { cursor: text; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 860px) {
+  .burger { display: flex; }
+  nav.links {
+    position: fixed; inset: 0 0 0 auto; width: min(78vw, 320px);
+    flex-direction: column; align-items: flex-start; justify-content: center; gap: 1.6rem;
+    background: var(--bg-2); border-left: 1px solid var(--line); padding: 2rem;
+    transform: translateX(100%); transition: transform .4s cubic-bezier(.2,.7,.2,1);
+    box-shadow: var(--shadow-lift);
+  }
+  nav.links.open { transform: translateX(0); }
+  nav.links a { font-size: 1.05rem; }
+  nav.links .toggle { margin-top: .5rem; }
+
+  .dossier { grid-template-columns: 1fr; }
+  .dossier .photo { max-width: 240px; }
+  .cases { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 400px) {
+  .fact { grid-template-columns: 1fr; gap: .2rem; }
+  .btn { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
+   REDUCED MOTION — honour the user's OS preference.
+   Disable transforms/animations and reveal everything.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal, .case .tag { opacity: 1 !important; transform: none !important; }
+  .hero .fp { animation: none !important; }
+}
+</style>
+</head>
+<body>
+<a href="#cases" class="skip">Skip to the Case Files</a>
+
+<!-- soft red light that trails the cursor across the whole page -->
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- page-wide animated background: drifting glows + floating dust motes -->
+<div class="page-fx" aria-hidden="true">
+  <div class="page-glow g1"></div>
+  <div class="page-glow g2"></div>
+  <div class="page-glow g3"></div>
+  <div class="motes page-motes">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+  <a href="#top" class="brand"><span class="dot" aria-hidden="true"></span>T. DE SILVA · CASE FILE</a>
+
+  <nav class="links" id="menu" aria-label="Primary">
+    <a href="#top">The Case</a>
+    <a href="#about">The Detective</a>
+    <a href="#cases">Case Files</a>
+    <a href="#toolkit">The Toolkit</a>
+    <a href="#record">The Record</a>
+    <a href="#contact">Make Contact</a>
+    <!-- dark / daylight toggle -->
+    <button class="toggle" id="themeToggle" type="button" aria-pressed="false" title="Toggle daylight mode">
+      <svg class="icon" id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span id="themeLabel">DAYLIGHT</span>
+    </button>
+  </nav>
+
+  <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<main id="top">
+  <!-- ======================= HERO ======================= -->
+  <section class="hero" aria-labelledby="hero-name">
+    <div class="motif" aria-hidden="true">
+      <!-- breathing lamplight glow -->
+      <div class="glow"></div>
+
+      <!-- swaying red thread arc -->
+      <svg class="thread-arc" viewBox="0 0 1200 800" fill="none" stroke="currentColor" stroke-width="1.5" preserveAspectRatio="none">
+        <path d="M-50 180 C 300 60, 520 320, 820 200 S 1250 120, 1300 300"/>
+        <path d="M-50 560 C 250 460, 600 640, 900 520 S 1250 600, 1300 440"/>
+      </svg>
+
+      <!-- primary drifting fingerprint -->
+      <svg class="fp" viewBox="0 0 200 240" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M100 20c-40 0-70 32-70 74 0 30 10 60 10 90"/>
+        <path d="M100 42c-28 0-50 24-50 55 0 32 12 55 12 85"/>
+        <path d="M100 64c-18 0-32 16-32 36 0 34 14 55 14 90"/>
+        <path d="M100 86c-8 0-13 8-13 18 0 38 16 56 16 94"/>
+        <path d="M100 20c40 0 70 32 70 74 0 30-10 60-10 90"/>
+        <path d="M100 42c28 0 50 24 50 55 0 32-12 55-12 85"/>
+        <path d="M100 64c18 0 32 16 32 36 0 34-14 55-14 90"/>
+      </svg>
+
+      <!-- second fainter fingerprint, bottom-left -->
+      <svg class="fp2" viewBox="0 0 200 240" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M100 20c-40 0-70 32-70 74 0 30 10 60 10 90"/>
+        <path d="M100 42c-28 0-50 24-50 55 0 32 12 55 12 85"/>
+        <path d="M100 64c-18 0-32 16-32 36 0 34 14 55 14 90"/>
+        <path d="M100 86c-8 0-13 8-13 18 0 38 16 56 16 94"/>
+        <path d="M100 20c40 0 70 32 70 74 0 30-10 60-10 90"/>
+        <path d="M100 42c28 0 50 24 50 55 0 32-12 55-12 85"/>
+      </svg>
+
+      <!-- floating dust motes -->
+      <div class="motes">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="wrap hero-inner reveal">
+      <div class="status"><span class="blink" aria-hidden="true"></span>CASE STATUS: OPEN</div>
+      <h1 id="hero-name"><span class="thin">Case file on</span><span class="name-line">Thirandi De Silva</span></h1>
+      <p class="role">Computing Undergraduate</p>
+      <p class="tagline"><span id="typed"></span><span class="caret" aria-hidden="true">▌</span></p>
+
+      <div class="btn-row">
+        <a href="#cases" class="btn">Open the Case Files</a>
+        <!-- download attribute forces download of the local CV file -->
+        <a href="cv.pdf" download class="btn ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+          Download CV
+        </a>
+      </div>
+
+      <div class="loc">
+        <span>Nugegoda, Sri Lanka</span>
+        <span>✉ thirandidesilva2002@gmail.com</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ABOUT ======================= -->
+  <section id="about" aria-labelledby="about-h">
+    <span class="thread" aria-hidden="true"></span>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="label">Dossier · The Detective</span>
+        <h2 id="about-h">The Detective's Profile</h2>
+      </div>
+
+      <div class="dossier reveal">
+        <div class="photo">
+          <img src="thirandi.png" alt="Portrait of Thirandi De Silva" width="260" height="347" />
+          <span class="stamp">CONFIDENTIAL</span>
+        </div>
+        <div>
+          <span class="label">Subject</span>
+          <h3>Thirandi De Silva</h3>
+          <p class="bio">
+            A Computing student with hands-on experience building mobile apps in SwiftUI and
+            Flutter using modern development practices. Strong in OOP, cross-platform
+            development, web development with REST APIs, and Git across the full cycle from
+            design to testing. Detail-oriented, quick to learn, and focused on reliable,
+            user-focused mobile software.
+          </p>
+          <div class="facts">
+            <div class="fact"><span class="k">Known for</span><span class="v">Building mobile apps end-to-end — design → development → testing</span></div>
+            <div class="fact"><span class="k">Specialty</span><span class="v">iOS (Swift / SwiftUI) &amp; Flutter</span></div>
+            <div class="fact"><span class="k">Methods</span><span class="v">OOP · REST APIs · Cross-platform · Git</span></div>
+            <div class="fact"><span class="k">Last seen</span><span class="v">Nugegoda, Sri Lanka</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= CASE FILES ======================= -->
+  <section id="cases" aria-labelledby="cases-h">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="label">Evidence · Solved &amp; Active</span>
+        <h2 id="cases-h">Case Files</h2>
+        <p>Each project, logged and filed. Hover a file to un-redact the detective's note.</p>
+      </div>
+
+      <div class="cases">
+        <!-- CASE #001 -->
+        <article class="case reveal" tabindex="0">
+          <div class="top"><span class="num">CASE FILE #001</span><span class="dates">Jun 2026 – Oct 2026</span></div>
+          <h3>Pawsitivity</h3>
+          <p class="desc">A mobile-based clinical decision support system that assesses canine anxiety severity in domestic dogs.</p>
+          <p class="redacted"><span class="label" style="color:var(--paper-dim)">Note:&nbsp;</span><span class="bar">A clinical decision tool putting diagnostics in an owner's pocket.</span></p>
+          <div class="evidence">
+            <span class="tag">Flutter</span><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">PostgreSQL</span>
+          </div>
+          <div class="case-links">
+            <a href="https://github.com/Thirandidesilva/Pawsitivity-Mobile" target="_blank" rel="noopener" aria-label="Pawsitivity GitHub repository">▸ GitHub</a>
+          </div>
+        </article>
+
+        <!-- CASE #002 -->
+        <article class="case reveal" tabindex="0">
+          <div class="top"><span class="num">CASE FILE #002</span><span class="dates">Apr 2026 – May 2026</span></div>
+          <h3>Pet Connect</h3>
+          <p class="desc">A native iOS pet-adoption app connecting shelters with adopters.</p>
+          <p class="redacted"><span class="label" style="color:var(--paper-dim)">Note:&nbsp;</span><span class="bar">Matching rescue animals to the right homes, one swipe at a time.</span></p>
+          <div class="evidence">
+            <span class="tag">SwiftUI</span><span class="tag">Firebase</span>
+          </div>
+          <div class="case-links">
+            <a href="https://github.com/Thirandidesilva/PetConnect" target="_blank" rel="noopener" aria-label="Pet Connect GitHub repository">▸ GitHub</a>
+          </div>
+        </article>
+
+        <!-- CASE #003 -->
+        <article class="case reveal" tabindex="0">
+          <div class="top"><span class="num">CASE FILE #003</span><span class="dates">Feb 2026 – Mar 2026</span></div>
+          <h3>Clinic Flow</h3>
+          <p class="desc">A complete iOS front end for a clinic management application.</p>
+          <p class="redacted"><span class="label" style="color:var(--paper-dim)">Note:&nbsp;</span><span class="bar">Streamlining the waiting room from check-in to checkout.</span></p>
+          <div class="evidence">
+            <span class="tag">SwiftUI</span>
+          </div>
+          <div class="case-links">
+            <a href="https://github.com/Thirandidesilva/ClinicFlow" target="_blank" rel="noopener" aria-label="Clinic Flow GitHub repository">▸ GitHub</a>
+          </div>
+        </article>
+
+        <!-- CASE #004 -->
+        <article class="case reveal" tabindex="0">
+          <div class="top"><span class="num">CASE FILE #004</span><span class="dates">Apr 2025 – May 2025</span></div>
+          <h3>Algo Play</h3>
+          <p class="desc">A game-menu application bundling 5 games.</p>
+          <p class="redacted"><span class="label" style="color:var(--paper-dim)">Note:&nbsp;</span><span class="bar">Five games, one menu — a playground for algorithms.</span></p>
+          <div class="evidence">
+            <span class="tag">Java</span><span class="tag">JavaFX</span><span class="tag">PostgreSQL</span>
+          </div>
+          <div class="case-links">
+            <a href="https://github.com/Thirandidesilva/AlgoPlay" target="_blank" rel="noopener" aria-label="Algo Play GitHub repository">▸ GitHub</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= TOOLKIT ======================= -->
+  <section id="toolkit" aria-labelledby="toolkit-h">
+    <span class="thread" aria-hidden="true"></span>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="label">The Evidence Board</span>
+        <h2 id="toolkit-h">The Toolkit</h2>
+        <p>The instruments of the trade — pinned to the board.</p>
+      </div>
+
+      <div class="board">
+        <div class="kit reveal"><h3>Languages</h3><ul><li>Swift</li><li>Java</li><li>Dart</li><li>Python</li></ul></div>
+        <div class="kit reveal"><h3>Mobile</h3><ul><li>iOS (Swift / SwiftUI)</li><li>Flutter</li></ul></div>
+        <div class="kit reveal"><h3>Web</h3><ul><li>Node.js</li><li>HTML</li><li>CSS</li></ul></div>
+        <div class="kit reveal"><h3>Databases</h3><ul><li>PostgreSQL</li><li>SQLite</li><li>Firebase</li></ul></div>
+        <div class="kit reveal"><h3>Tools</h3><ul><li>Xcode</li><li>VS Code</li><li>Git</li><li>Figma</li><li>Postman</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= THE RECORD ======================= -->
+  <section id="record" aria-labelledby="record-h">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="label">Case Log · Verified</span>
+        <h2 id="record-h">The Record</h2>
+        <p>Education &amp; certifications, logged in chronological order.</p>
+      </div>
+
+      <div class="timeline reveal">
+        <div class="entry">
+          <span class="when">2024 – 2026</span>
+          <h3>BSc (Hons) Computing</h3>
+          <p class="where">Coventry University, United Kingdom</p>
+          <p class="meta">Status: results pending</p>
+        </div>
+        <div class="entry">
+          <span class="when">2023 – 2024</span>
+          <h3>HND in Software Engineering</h3>
+          <p class="where">NIBM, Sri Lanka</p>
+          <p class="meta">Merit · GPA 3.65 / 4</p>
+        </div>
+        <div class="entry">
+          <span class="when">2022 – 2023</span>
+          <h3>Diploma in Software Engineering</h3>
+          <p class="where">NIBM, Sri Lanka</p>
+          <p class="meta">GPA 3.75 / 4</p>
+        </div>
+      </div>
+
+      <div class="record-extra">
+        <div class="kit reveal">
+          <h3>Certifications</h3>
+          <ul>
+            <li>Postman API Fundamentals Student Expert — Nov 2024</li>
+            <li>Web Design for Beginners — University of Moratuwa (2023)</li>
+          </ul>
+        </div>
+        <div class="kit reveal">
+          <h3>Languages</h3>
+          <ul><li>Sinhala</li><li>English</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= CONTACT ======================= -->
+  <section id="contact" aria-labelledby="contact-h">
+    <span class="thread" aria-hidden="true"></span>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="label">Close the Case</span>
+        <h2 id="contact-h">Make Contact</h2>
+        <p>Have a case that needs solving? Leave a tip and I'll follow the lead.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-intro reveal">
+          <p>The fastest way to reach me is by email. Drop a message any time — every lead gets a reply.</p>
+          <a class="btn mailbtn" href="mailto:thirandidesilva2002@gmail.com">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+            thirandidesilva2002@gmail.com
+          </a>
+          <div class="socials">
+            <!-- Replace # with your real profile URLs -->
+            <a href="https://github.com/Thirandidesilva" target="_blank" rel="noopener" aria-label="GitHub profile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.94c.57.1.78-.25.78-.55v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.56-.3-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.2-3.1-.12-.3-.52-1.49.1-3.1 0 0 .97-.31 3.2 1.18a11 11 0 0 1 5.82 0c2.22-1.5 3.19-1.18 3.19-1.18.63 1.61.23 2.8.11 3.1.75.81 1.2 1.84 1.2 3.1 0 4.43-2.7 5.4-5.28 5.69.41.36.78 1.07.78 2.16v3.2c0 .31.2.67.79.55A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/thirandi-de-silva" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8h4V24h-4zM8.5 8h3.83v2.2h.05c.53-1 1.84-2.2 3.79-2.2 4.05 0 4.8 2.67 4.8 6.14V24h-4v-6.9c0-1.65-.03-3.76-2.3-3.76-2.3 0-2.65 1.8-2.65 3.65V24h-4z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             CONTACT FORM — powered by Formspree.
+             >>> REPLACE "YOUR_FORM_ID" below with your own Formspree
+                 endpoint id (sign up free at https://formspree.io,
+                 create a form, and paste the code after /f/).
+             Until then the form validates and shows a demo success
+             message but will NOT actually deliver email.
+             ======================================================== -->
+        <form class="tip reveal" id="tipForm" action="https://formspree.io/f/maeeawyq" method="POST" novalidate>
+          <div class="field">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" autocomplete="name" required />
+            <span class="err" id="err-name" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required />
+            <span class="err" id="err-email" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="message">The Tip</label>
+            <textarea id="message" name="message" required></textarea>
+            <span class="err" id="err-message" aria-live="polite"></span>
+          </div>
+          <button type="submit" class="btn" id="tipSubmit">Submit the Tip</button>
+          <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="wrap">
+    <div class="fp-mark" aria-hidden="true">
+      <svg width="40" height="40" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M24 6C14 6 8 14 8 24c0 7 2 13 2 18"/>
+        <path d="M24 12c-7 0-12 6-12 13 0 8 3 13 3 20"/>
+        <path d="M24 18c-4 0-7 4-7 8 0 9 4 14 4 20"/>
+        <path d="M24 6c10 0 16 8 16 18 0 7-2 13-2 18"/>
+        <path d="M24 12c7 0 12 6 12 13 0 8-3 13-3 20"/>
+      </svg>
+    </div>
+    <p>Case file compiled by Thirandi De Silva · © 2026</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   Everything below is dependency-free vanilla JS.
+   ============================================================ */
+(function () {
+  "use strict";
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- THEME TOGGLE (persisted in localStorage) ---------- */
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  var themeLabel = document.getElementById('themeLabel');
+  var themeIcon = document.getElementById('themeIcon');
+  var SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>';
+  var MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+
+  function applyTheme(mode) {
+    root.setAttribute('data-theme', mode);
+    var isLight = mode === 'light';
+    toggle.setAttribute('aria-pressed', String(isLight));
+    themeLabel.textContent = isLight ? 'NIGHT' : 'DAYLIGHT';
+    themeIcon.innerHTML = isLight ? MOON : SUN;
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('tds-theme'); } catch (e) {}
+  applyTheme(saved === 'light' ? 'light' : 'dark');
+
+  toggle.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try { localStorage.setItem('tds-theme', next); } catch (e) {}
+  });
+
+  /* ---------- MOBILE NAV (hamburger) ---------- */
+  var burger = document.getElementById('burger');
+  var menu = document.getElementById('menu');
+  function closeMenu() {
+    menu.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Open menu');
+  }
+  burger.addEventListener('click', function () {
+    var open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  /* close the menu when a link is chosen (mobile) */
+  menu.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', closeMenu);
+  });
+  /* Escape closes the menu */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  /* ---------- STICKY NAV SHRINK ON SCROLL ---------- */
+  var nav = document.getElementById('nav');
+  function onScroll() {
+    if (window.scrollY > 80) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- SCROLL-REVEAL via IntersectionObserver ---------- */
+  var revealEls = document.querySelectorAll('.reveal, .case');
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    /* no animation: just show everything */
+    revealEls.forEach(function (el) { el.classList.add('in-view'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          el.classList.add('in-view');
+          /* stagger the evidence tags inside a case file */
+          var tags = el.querySelectorAll('.tag');
+          tags.forEach(function (tag, i) {
+            tag.style.transitionDelay = (i * 80) + 'ms';
+          });
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ---------- TYPEWRITER TAGLINE ---------- */
+  var typed = document.getElementById('typed');
+  var phrase = 'Every app is a case worth solving.';
+  if (reduceMotion) {
+    typed.textContent = phrase;      /* reduced motion: show instantly */
+  } else {
+    var i = 0;
+    function type() {
+      if (i <= phrase.length) {
+        typed.textContent = phrase.slice(0, i);
+        i++;
+        setTimeout(type, 45);
+      }
+    }
+    setTimeout(type, 600);
+  }
+
+  /* ---------- PAGE-WIDE CURSOR GLOW ---------- */
+  var cursorGlow = document.getElementById('cursorGlow');
+  var finePointer = window.matchMedia('(pointer: fine)').matches;
+  if (cursorGlow && finePointer && !reduceMotion) {
+    window.addEventListener('pointermove', function (e) {
+      cursorGlow.style.transform = 'translate3d(' + e.clientX + 'px,' + e.clientY + 'px,0) translate(-50%,-50%)';
+      cursorGlow.style.opacity = '1';
+    }, { passive: true });
+    /* fade out when the pointer leaves the window */
+    document.addEventListener('mouseleave', function () { cursorGlow.style.opacity = '0'; });
+    document.addEventListener('mouseenter', function () { cursorGlow.style.opacity = '1'; });
+  }
+
+  /* ---------- CASE FILES: cursor-following red glow ---------- */
+  document.querySelectorAll('.case, .kit').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+    /* reset to centre when the cursor leaves */
+    card.addEventListener('pointerleave', function () {
+      card.style.setProperty('--mx', '50%');
+      card.style.setProperty('--my', '50%');
+    });
+  });
+
+  /* ---------- CONTACT FORM: validation + Formspree submit ---------- */
+  var form = document.getElementById('tipForm');
+  var note = document.getElementById('formNote');
+  var fields = ['name', 'email', 'message'];
+  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setError(id, msg) {
+    var input = document.getElementById(id);
+    var err = document.getElementById('err-' + id);
+    err.textContent = msg || '';
+    input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  }
+
+  function validate() {
+    var ok = true;
+    var vals = {};
+    fields.forEach(function (id) { vals[id] = document.getElementById(id).value.trim(); });
+
+    if (!vals.name) { setError('name', 'Please tell me who is filing this tip.'); ok = false; }
+    else setError('name', '');
+
+    if (!vals.email) { setError('email', 'An email is needed so I can reply.'); ok = false; }
+    else if (!emailRe.test(vals.email)) { setError('email', 'That email does not look right.'); ok = false; }
+    else setError('email', '');
+
+    if (!vals.message) { setError('message', 'The tip cannot be blank.'); ok = false; }
+    else if (vals.message.length < 10) { setError('message', 'Give me a little more to work with (10+ characters).'); ok = false; }
+    else setError('message', '');
+
+    return ok;
+  }
+
+  /* re-validate a field once the user has interacted with it */
+  fields.forEach(function (id) {
+    document.getElementById(id).addEventListener('blur', validate);
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    note.className = 'form-note';
+    note.textContent = '';
+
+    if (!validate()) {
+      note.className = 'form-note bad';
+      note.textContent = 'The case file is incomplete — check the fields above.';
+      return;
+    }
+
+    /* If the Formspree endpoint has not been configured yet, show a
+       friendly demo message instead of a failed network request. */
+    if (form.action.indexOf('YOUR_FORM_ID') !== -1) {
+      note.className = 'form-note ok';
+      note.textContent = 'Tip received (demo mode). Add your Formspree ID to deliver it for real.';
+      form.reset();
+      return;
+    }
+
+    var submitBtn = document.getElementById('tipSubmit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Filing…';
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { Accept: 'application/json' }
+    }).then(function (res) {
+      if (res.ok) {
+        note.className = 'form-note ok';
+        note.textContent = 'Tip filed. Case noted — I will be in touch soon.';
+        form.reset();
+      } else {
+        return res.json().then(function (data) {
+          throw new Error((data && data.error) || 'Submission failed.');
+        });
+      }
+    }).catch(function () {
+      note.className = 'form-note bad';
+      note.textContent = 'Something went wrong sending the tip. Please email me directly.';
+    }).finally(function () {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit the Tip';
+    });
+  });
+})();
+</script>
+</body>
+</html>
